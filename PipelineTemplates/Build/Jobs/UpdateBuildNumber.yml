@@ -1,0 +1,15 @@
+parameters:
+- name: PoolImage
+
+jobs:
+- job: UpdateBuildNumber
+  dependsOn: []
+  displayName: Update Build Number
+  pool:
+    vmImage: ${{ parameters.PoolImage }}
+  steps:
+    - checkout: none
+    - pwsh: |
+        Write-Host "##vso[build.updatebuildnumber]$(SemanticVersion.SemanticVersion)"
+      name: UpdateBuildNumber
+      displayName: Update Build Number - $(SemanticVersion.SemanticVersion)

@@ -60,3 +60,12 @@ stages:
         Patch: 3
         PreRelease: "Preview.4"
         poolImage: ${{ parameters.poolImage }}
+
+    - stage: UpdateBuildNumberCI
+      dependsOn: ['TestVariables']
+      displayName: Update BuildNumber
+
+      jobs:
+        - template: PipelineTemplates/Build/Jobs/UpdateBuildNumber.yml  
+          parameters:
+            PoolImage: ${{ parameters.poolImage }}

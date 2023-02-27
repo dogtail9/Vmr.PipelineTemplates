@@ -10,30 +10,6 @@ stages:
     dependsOn: []
     displayName: Test Variables
     jobs:
-      - job: TestVariableCI
-        dependsOn: []
-        displayName: Templates Variables (CI)
-        pool:
-          vmImage: ${{ parameters.poolImage }}
-        variables:
-          - template: ../PipelineTemplates/Variables.yml
-            parameters:
-              Major: ${{ parameters.Major }}
-              Minor: ${{ parameters.Minor }}
-              Patch: ${{ parameters.Patch }}
-              PreRelease: ${{ parameters.PreRelease }}
-              IsRelease: 'false'
-        steps:
-          - pwsh: |
-              Write-Host "SemanticVersion.Version: $(SemanticVersion.Version)"
-              Write-Host "SemanticVersion.Revision: $(SemanticVersion.Revision)"
-              Write-Host "SemanticVersion.Date: $(SemanticVersion.Date)"
-              Write-Host "SemanticVersion.Build: $(SemanticVersion.Build)"
-              Write-Host "SemanticVersion.PreRelease: $(SemanticVersion.PreRelease)"
-              Write-Host "SemanticVersion.Suffix: $(SemanticVersion.Suffix)"
-              Write-Host "SemanticVersion.SemanticVersion: $(SemanticVersion.SemanticVersion)"
-            displayName: Variables
-        
       - job: TestVariableRelease
         dependsOn: []
         displayName: Templates Variables (Release)
@@ -47,6 +23,30 @@ stages:
               Patch: ${{ parameters.Patch }}
               PreRelease: ${{ parameters.PreRelease }}
               IsRelease: 'true'
+        steps:
+          - pwsh: |
+              Write-Host "SemanticVersion.Version: $(SemanticVersion.Version)"
+              Write-Host "SemanticVersion.Revision: $(SemanticVersion.Revision)"
+              Write-Host "SemanticVersion.Date: $(SemanticVersion.Date)"
+              Write-Host "SemanticVersion.Build: $(SemanticVersion.Build)"
+              Write-Host "SemanticVersion.PreRelease: $(SemanticVersion.PreRelease)"
+              Write-Host "SemanticVersion.Suffix: $(SemanticVersion.Suffix)"
+              Write-Host "SemanticVersion.SemanticVersion: $(SemanticVersion.SemanticVersion)"
+            displayName: Variables
+
+      - job: TestVariableCI
+        dependsOn: ['TestVariableRelease']
+        displayName: Templates Variables (CI)
+        pool:
+          vmImage: ${{ parameters.poolImage }}
+        variables:
+          - template: ../PipelineTemplates/Variables.yml
+            parameters:
+              Major: ${{ parameters.Major }}
+              Minor: ${{ parameters.Minor }}
+              Patch: ${{ parameters.Patch }}
+              PreRelease: ${{ parameters.PreRelease }}
+              IsRelease: 'false'
         steps:
           - pwsh: |
               Write-Host "SemanticVersion.Version: $(SemanticVersion.Version)"
