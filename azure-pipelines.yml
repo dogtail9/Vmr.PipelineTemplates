@@ -1,0 +1,62 @@
+# mm HH DD MM DW
+#  \  \  \  \  \__ Days of week
+#   \  \  \  \____ Months
+#    \  \  \______ Days
+#     \  \________ Hours
+#      \__________ Minutes
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    always: "true"
+    branches:
+      include:
+        - main
+        - feature/*
+
+trigger:
+  branches:
+    include:
+      - user/*
+      - feature/*
+      - epic/*
+      - main
+  paths:
+    exclude:
+      - Samples
+
+variables:
+  - template: PipelineTemplates/Variables.yml
+    parameters:
+      Major: 1
+      Minor: 2
+      Patch: 3
+      PreRelease: "Preview.4"
+      IsRelease: 'false'
+
+  - name: BuildPoolImage
+    value: ubuntu-latest
+
+parameters:
+  - name: poolImage
+    displayName: Pool Image
+    type: string
+    default: ubuntu-latest
+    values:
+      - ubuntu-latest
+      - ubuntu-22.04
+      - ubuntu-20.04
+      - windows-latest
+      - windows-2022
+      - windows-2019
+      - macOS-latest
+      - macOS-12
+      - macOS-11
+
+stages:
+    - template: TestPipelines/TestVariables.yml
+      parameters:
+        Major: 1
+        Minor: 2
+        Patch: 3
+        PreRelease: "Preview.4"
+        poolImage: ${{ parameters.poolImage }}

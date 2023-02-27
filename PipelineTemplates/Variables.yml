@@ -1,0 +1,37 @@
+parameters:
+  - name: Major
+  - name: Minor
+  - name: Patch
+  - name: PreRelease
+  - name: IsRelease
+
+variables:
+  - name: SemanticVersion.Version
+    value: $[format('{0}.{1}.{2}', '${{ parameters.Major }}', '${{ parameters.Minor }}', '${{ parameters.Patch }}')]
+
+  - name: SemanticVersion.Revision
+    value: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 1)]
+
+  - name: SemanticVersion.Date
+    value: $[format('{0:yyMMdd}', pipeline.startTime)]
+
+  - name: SemanticVersion.Build
+    value: $[format('{0}.{1}', variables['SemanticVersion.Date'], variables['SemanticVersion.Revision'])]
+
+  - name: SemanticVersion.PreRelease
+    ${{ if contains(variables['Build.Reason'], 'schedule') }}:
+      value: $[format('{0}','nightly')]
+    ${{ if not(contains(variables['Build.Reason'], 'schedule')) }}:
+      value: $[format('{0}', '${{ parameters.PreRelease }}')]
+
+  - name: SemanticVersion.Suffix
+    ${{ if eq('true', parameters['IsRelease']) }}:
+      value: $[format('{0}', '')]
+    ${{ if eq('false', parameters['IsRelease']) }}:
+      value: $[format('{0}.{1}', variables['SemanticVersion.PreRelease'], variables['SemanticVersion.Build'])]
+
+  - name: SemanticVersion.SemanticVersion
+    ${{ if eq('true', parameters['IsRelease']) }}:
+      value: $[format('{0}','$(SemanticVersion.Version)')]
+    ${{ if eq('false', parameters['IsRelease']) }}:
+      value: $[format('{0}-{1}', variables['SemanticVersion.Version'], variables['SemanticVersion.Suffix'])]
