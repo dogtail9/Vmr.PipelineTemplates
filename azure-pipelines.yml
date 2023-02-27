@@ -52,7 +52,7 @@ parameters:
   - name: TestPipelines
     displayName: Run Test Pipelines
     type: string
-    default: All
+    default: Build-Dotnet-Library
     values:
       - All
       - Variables

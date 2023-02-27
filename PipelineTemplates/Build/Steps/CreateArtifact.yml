@@ -10,9 +10,6 @@ steps:
       Contents: ${{ parameters.Contents }}
       TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.ArtifactName }}'
       flattenFolders: true
-      # |
-      #   **/*.nupkg
-      #   **/*.snupkg
       
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifact: ${{ parameters.ArtifactName }}'

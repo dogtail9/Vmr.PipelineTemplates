@@ -21,13 +21,13 @@ jobs:
           DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }} #$(DotnetSdkVersion)
           PackageFeed: ${{ parameters.PackageFeed }}
 
-      # - template: ../Steps/Dotnet/RunUnitTests.yml
-      #   parameters:
-      #     TestProjects:
-      #       - name: 'Unit Tests'
-      #         projects: '**/*.UnitTests.csproj'
-      #       - name: 'SpecFlow Tests'
-      #         projects: '**/*.Specs.csproj'
+      - template: ../Steps/RunUnitTests.yml
+        parameters:
+          TestProjects:
+            - name: 'Unit Tests'
+              projects: '**/*.UnitTests.csproj'
+            - name: 'SpecFlow Tests'
+              projects: '**/*.Specs.csproj'
       
       - template: ../Steps/CreateArtifact.yml
         parameters:
