@@ -3,7 +3,7 @@ parameters:
 
 stages:
   - stage: UpdateBuildNumberCI
-    dependsOn: ['Variables']
+    dependsOn: []
     displayName: Update BuildNumber
     jobs:
       - template: ../PipelineTemplates/Build/Jobs/UpdateBuildNumber.yml  

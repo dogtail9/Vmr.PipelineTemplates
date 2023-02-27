@@ -49,7 +49,19 @@ parameters:
       - macOS-12
       - macOS-11
 
+  - name: TestPipelines
+    displayName: Run Test Pipelines
+    type: string
+    default: All
+    values:
+      - All
+      - Variables
+      - Update-BuildNumber
+      - Create-Debug-Artifact
+      - Build-Dotnet-Library
+
 stages:
+  - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Variables')) }}:
     - template: TestPipelines/TestVariables.yml
       parameters:
         Major: 1
@@ -58,23 +70,23 @@ stages:
         PreRelease: "Preview.4"
         poolImage: ${{ parameters.poolImage }}
 
+  - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Update-BuildNumber')) }}:
     - template: TestPipelines/TestUpdateBuildNumber.yml
       parameters:
         poolImage: ${{ parameters.poolImage }}
-    
+
+  - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Create-Debug-Artifact')) }}:
     - template: TestPipelines/TestCreateDebugArtifact.yml
       parameters:
         poolImage: ${{ parameters.poolImage }}
 
-    - template: TestPipelines/TestBuildDotnetLibrary.yml
+  - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Build-Dotnet-Library')) }}:    
+    - template: PipelineTemplates/Build/Stages/DotnetLibrary.yml
       parameters:
-        poolImage: ${{ parameters.poolImage }}
-    # - template: PipelineTemplates/Build/Stages/DotnetLibrary.yml
-    #   parameters:
-    #     PoolImage: ${{ parameters.poolImage }}
-    #     SolutionToBuild: '**/*.sln'
-    #     DotnetSdkVersions:
-    #       - '6.x'
-    #       - '7.x'
-    #     PackageFeed: '7a831089-b1d9-4d9f-9ace-14eed8d818e6/f7bda9f7-5dc8-4858-bc8f-3dc52762390b'
-    #     CreateDebugArtifact: 'true'
+        PoolImage: ${{ parameters.poolImage }}
+        SolutionToBuild: '**/*.sln'
+        DotnetSdkVersions:
+          - '6.x'
+          - '7.x'
+        PackageFeed: '7a831089-b1d9-4d9f-9ace-14eed8d818e6/f7bda9f7-5dc8-4858-bc8f-3dc52762390b'
+        CreateDebugArtifact: 'true'

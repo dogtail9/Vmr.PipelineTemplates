@@ -11,7 +11,7 @@ parameters:
 jobs:
   - job: BuildLibrary
     dependsOn: ['UpdateBuildNumber']
-    displayName: Build Library
+    displayName: Build .NET Library
     pool:
       vmImage: ${{ parameters.PoolImage }}
     steps:
