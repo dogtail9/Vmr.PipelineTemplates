@@ -1,0 +1,11 @@
+parameters:
+  - name: DotnetSdkVersions
+    type: object
+  
+steps:
+  - ${{ each sdkVersion in parameters.DotnetSdkVersions }}:
+    - task: UseDotNet@2
+      displayName: Use .NET SDK ${{ sdkVersion }}
+      inputs:
+        packageType: 'sdk'
+        version: '${{ sdkVersion }}'

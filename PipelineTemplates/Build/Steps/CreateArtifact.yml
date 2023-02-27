@@ -1,0 +1,22 @@
+parameters:
+- name: ArtifactName
+- name: Contents
+  type: object
+
+steps:
+  - task: CopyFiles@2
+    displayName: 'Copy Files: ${{ parameters.ArtifactName }}'
+    inputs:
+      Contents: ${{ parameters.Contents }}
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.ArtifactName }}'
+      flattenFolders: true
+      # |
+      #   **/*.nupkg
+      #   **/*.snupkg
+      
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: ${{ parameters.ArtifactName }}'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/${{ parameters.ArtifactName }}'
+      artifact: ${{ parameters.ArtifactName }}
+      publishLocation: 'pipeline'

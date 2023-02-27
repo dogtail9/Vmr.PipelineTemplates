@@ -1,0 +1,25 @@
+parameters:
+  - name: SolutionToBuild
+  - name: DotnetSdkVersions
+    type: object
+  - name: PackageFeed
+  
+steps:
+  - template: ./UseDotnetSdk.yml
+    parameters: 
+      DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }}
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'NuGet Restore'
+    inputs:
+      command: 'restore'
+      projects: ${{ parameters.SolutionToBuild }}
+      feedsToUse: 'select'
+      vstsFeed: ${{ parameters.PackageFeed }}
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build Solution'
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.SolutionToBuild }}
+      arguments: '--configuration Release --no-restore -p:ContinuousIntegrationBuild=true -p:VersionPrefix=$(SemanticVersion.Version) -p:VersionSuffix=$(SemanticVersion.Suffix)' #-p:SourceRevisionId=$(Build.SourceVersion) -p:RepositoryUrl=$(Build.Repository.Uri) -p:RepositoryType=git -p:RepositoryBranch=$(BranchName) -p:PackageProjectUrl=https://trapets.com -p:SignAssembly=true -p:AssemblyOriginatorKeyFile=$(snkPath)'

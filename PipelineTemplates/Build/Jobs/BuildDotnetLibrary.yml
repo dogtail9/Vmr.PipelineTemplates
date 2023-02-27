@@ -1,0 +1,42 @@
+parameters:
+- name: PoolImage
+- name: SolutionToBuild
+- name: DotnetSdkVersions
+  type: object
+- name: PackageFeed
+- name: ArtifactName
+  default: 'Nuget'
+- name: CreateDebugArtifact
+
+jobs:
+  - job: BuildLibrary
+    dependsOn: ['UpdateBuildNumber']
+    displayName: Build Library
+    pool:
+      vmImage: ${{ parameters.PoolImage }}
+    steps:
+      - template: ../Steps/BuildDotnetSolution.yml
+        parameters:
+          SolutionToBuild: ${{ parameters.SolutionToBuild }} #$(SolutionToBuild)
+          DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }} #$(DotnetSdkVersion)
+          PackageFeed: ${{ parameters.PackageFeed }}
+
+      # - template: ../Steps/Dotnet/RunUnitTests.yml
+      #   parameters:
+      #     TestProjects:
+      #       - name: 'Unit Tests'
+      #         projects: '**/*.UnitTests.csproj'
+      #       - name: 'SpecFlow Tests'
+      #         projects: '**/*.Specs.csproj'
+      
+      - template: ../Steps/CreateArtifact.yml
+        parameters:
+          ArtifactName: ${{ parameters.ArtifactName }}
+          Contents: |
+            **/*.nupkg
+            **/*.snupkg
+
+      - ${{ if eq(parameters.CreateDebugArtifact, 'true') }}:
+        - template: ../../CreateDebugArtifact.yml
+          parameters:
+            name: 'DEBUG_BUILD_DOTNET_LIBRARY'
