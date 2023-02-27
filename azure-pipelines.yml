@@ -33,9 +33,6 @@ variables:
       PreRelease: "Preview.4"
       IsRelease: 'false'
 
-  - name: BuildPoolImage
-    value: ubuntu-latest
-
 parameters:
   - name: poolImage
     displayName: Pool Image
@@ -69,3 +66,18 @@ stages:
         - template: PipelineTemplates/Build/Jobs/UpdateBuildNumber.yml  
           parameters:
             PoolImage: ${{ parameters.poolImage }}
+
+    - stage: CreateDebugArfifact
+      dependsOn: []
+      displayName: Create Debug Arfifact
+
+      jobs:
+      - job: CreateDebugArfifact
+        dependsOn: []
+        displayName: Create Debug Arfifact
+        pool:
+          vmImage: ${{ parameters.poolImage }}
+        steps:
+          - template: PipelineTemplates/CreateDebugArtifact.yml
+            parameters:
+              name: TEST_DEBUG_ARTIFACT
