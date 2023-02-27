@@ -6,9 +6,9 @@ parameters:
 - name: poolImage
 
 stages:
-  - stage: TestVariables
+  - stage: Variables
     dependsOn: []
-    displayName: Test Variables
+    displayName: Variables
     jobs:
       - job: TestVariableRelease
         dependsOn: []
@@ -24,6 +24,7 @@ stages:
               PreRelease: ${{ parameters.PreRelease }}
               IsRelease: 'true'
         steps:
+          - checkout: none
           - pwsh: |
               Write-Host "SemanticVersion.Version: $(SemanticVersion.Version)"
               Write-Host "SemanticVersion.Revision: $(SemanticVersion.Revision)"
@@ -48,6 +49,7 @@ stages:
               PreRelease: ${{ parameters.PreRelease }}
               IsRelease: 'false'
         steps:
+          - checkout: none
           - pwsh: |
               Write-Host "SemanticVersion.Version: $(SemanticVersion.Version)"
               Write-Host "SemanticVersion.Revision: $(SemanticVersion.Revision)"

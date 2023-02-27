@@ -1,0 +1,11 @@
+parameters:
+- name: poolImage
+
+stages:
+  - stage: UpdateBuildNumberCI
+    dependsOn: ['Variables']
+    displayName: Update BuildNumber
+    jobs:
+      - template: ../PipelineTemplates/Build/Jobs/UpdateBuildNumber.yml  
+        parameters:
+          PoolImage: ${{ parameters.poolImage }}
