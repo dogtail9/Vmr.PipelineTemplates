@@ -1,11 +1,11 @@
 parameters:
 - name: PoolImage
 - name: SolutionToBuild
+- name: ProjectToPublish
 - name: DotnetSdkVersions
   type: object
 - name: PackageFeed
 - name: ArtifactName
-  default: 'Nuget'
 - name: CreateDebugArtifact
 
 jobs:
@@ -29,14 +29,16 @@ jobs:
             - name: 'SpecFlow Tests'
               projects: '**/*.Specs.csproj'
       
+      - template: ../Steps/PublishWebApi.yml
+        parameters:
+          ProjectToPublish: ${{ parameters.ProjectToPublish }}
+
       - template: ../Steps/CreateArtifact.yml
         parameters:
           ArtifactName: ${{ parameters.ArtifactName }}
-          Contents: |
-            **/*.nupkg
-            **/*.snupkg
+          Contents: $(Build.ArtifactStagingDirectory)/Application
 
       - ${{ if eq(parameters.CreateDebugArtifact, 'true') }}:
         - template: ../../CreateDebugArtifact.yml
           parameters:
-            name: 'DEBUG_BUILD_DOTNET_LIBRARY'
+            name: 'DEBUG_BUILD_DOTNET_WEBAPI'

@@ -1,0 +1,18 @@
+parameters:
+  - name: ProjectToPublish
+
+steps:
+  # - task: DotNetCoreCLI@2
+  #   displayName: 'Publish Project ${{ parameters.ProjectToPublish }}'
+  #   inputs:
+  #     command: 'publish'
+  #     projects: ${{ parameters.SolutionToBuild }}
+  #     arguments: '--configuration Release --no-restore -p:ContinuousIntegrationBuild=true -p:VersionPrefix=$(SemanticVersion.Version) -p:VersionSuffix=$(SemanticVersion.Suffix)' #-p:SourceRevisionId=$(Build.SourceVersion) -p:RepositoryUrl=$(Build.Repository.Uri) -p:RepositoryType=git -p:RepositoryBranch=$(BranchName) -p:PackageProjectUrl=https://trapets.com -p:SignAssembly=true -p:AssemblyOriginatorKeyFile=$(snkPath)'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish Project ${{ parameters.ProjectToPublish }}'
+    inputs:
+      command: 'publish'
+      projects: ${{ parameters.ProjectToPublish }}
+      arguments: '--configuration Release --no-build --output $(Build.ArtifactStagingDirectory)/Application'
+      zipAfterPublish: false

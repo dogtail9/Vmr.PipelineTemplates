@@ -52,7 +52,7 @@ parameters:
   - name: TestPipelines
     displayName: Run Test Pipelines
     type: string
-    default: Build-Dotnet-Library
+    default: Build-Dotnet-WebApi
     values:
       - All
       - Variables
@@ -99,3 +99,16 @@ stages:
         PackageFeed: 'VirtualMonoRepo/VirtualMonoRepo_CI2'
         Environment: 'Test'
         CreateDebugArtifact: 'true'
+  
+  - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Build-Dotnet-WebApi')) }}:    
+    - template: PipelineTemplates/Build/Stages/DotnetWebApi.yml
+      parameters:
+        PoolImage: ${{ parameters.poolImage }} 
+        SolutionToBuild: '**/*.sln'
+        ProjectToPublish: '**/TestDotnetWebApi.csproj'
+        DotnetSdkVersions:
+          - '6.x'
+          - '7.x'
+        PackageFeed: 'VirtualMonoRepo/VirtualMonoRepo_CI2'
+        CreateDebugArtifact: 'true'
+    
