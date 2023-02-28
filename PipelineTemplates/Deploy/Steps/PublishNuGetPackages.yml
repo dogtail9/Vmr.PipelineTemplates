@@ -1,0 +1,19 @@
+parameters:
+- name: Feed
+- name: ArtifactName
+
+steps:
+  - download: current
+    artifact: ${{ parameters.ArtifactName }}
+    displayName: 'Download the ${{ parameters.ArtifactName }} Artifact'
+
+  - task: NuGetAuthenticate@0
+    displayName: 'NuGet Authenticate'
+
+  - task: NuGetCommand@2
+    displayName: 'Publish NuGet Packages'
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Pipeline.Workspace)/${{ parameters.ArtifactName }}/**/*.nupkg;!$(Pipeline.Workspace)/${{ parameters.ArtifactName }}/**/*.snupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: ${{ parameters.Feed }}

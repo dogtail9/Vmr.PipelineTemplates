@@ -9,3 +9,11 @@ steps:
       targetPath: "$(Pipeline.Workspace)"
       artifact: ${{ parameters.name }}
       publishLocation: "pipeline"
+
+  # - task: PublishPipelineArtifact@1
+  #   displayName: 'Create Debug Artifact Temp'
+  #   condition: always()
+  #   inputs:
+  #     targetPath: "$(Agent.TempDirectory)"
+  #     artifact: '${{ parameters.name }}-TEMP'
+  #     publishLocation: "pipeline"

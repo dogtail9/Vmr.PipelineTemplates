@@ -59,6 +59,7 @@ parameters:
       - Update-BuildNumber
       - Create-Debug-Artifact
       - Build-Dotnet-Library
+      - Build-Dotnet-WebApi
 
 stages:
   - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Variables')) }}:

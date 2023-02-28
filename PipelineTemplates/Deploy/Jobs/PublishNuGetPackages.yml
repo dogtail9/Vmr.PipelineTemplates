@@ -1,0 +1,29 @@
+parameters:
+  - name: PoolImage
+  - name: PackageFeed
+  - name: CreateDebugArtifact
+  - name: NuGetArtifactName
+
+jobs:
+  - deployment:
+    dependsOn: []
+    displayName: 'Publish NuGet Packages'
+    variables:
+      - name: DebugArtifactName
+        value: $[format('DEBUG_PUBLISH_NUGET_PACKAGES_TO_{0}', upper('${{ parameters.Environment }}'))]
+    pool:
+      vmImage: ${{ parameters.PoolImage }}
+    environment: ${{ parameters.Environment }}
+    strategy:
+     runOnce:
+       deploy:
+         steps:
+          - template: ../Steps/PublishNuGetPackages.yml
+            parameters:
+              Feed: ${{ parameters.PackageFeed }}
+              ArtifactName: ${{ parameters.NuGetArtifactName }}
+
+          - ${{ if eq(parameters.CreateDebugArtifact, 'true') }}:
+            - template: ../../CreateDebugArtifact.yml
+              parameters:
+                name: $(DebugArtifactName)

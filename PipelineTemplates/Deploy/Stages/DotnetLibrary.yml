@@ -1,0 +1,19 @@
+parameters:
+  - name: PoolImage
+  - name: PackageFeed
+  - name: CreateDebugArtifact
+
+stages:
+  - stage: PublishLibraryPackagesToTest
+    dependsOn: 
+      - BuildDotnetLibrary
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'Schedule'), ne(variables['Build.Reason'], 'PullRequest'))
+    displayName: 'Publish NuGet packages To Test'
+    jobs:
+      - template: ../Jobs/PublishNuGetPackages.yml
+        parameters:
+          PoolImage: ${{ parameters.PoolImage }}
+          PackageFeed: ${{ parameters.PackageFeed }}
+          CreateDebugArtifact: ${{ parameters.CreateDebugArtifact }}
+          NuGetArtifactName: 'NuGet'
+  

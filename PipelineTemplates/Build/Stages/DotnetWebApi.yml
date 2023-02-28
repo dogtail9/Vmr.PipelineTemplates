@@ -1,0 +1,26 @@
+parameters:
+- name: PoolImage
+- name: SolutionToBuild
+- name: DotnetSdkVersions
+  type: object
+- name: PackageFeed
+- name: CreateDebugArtifact
+
+stages:
+  - stage: BuildDotnetLibrary
+    dependsOn: []
+    displayName: Build .NET Library
+  
+    jobs:
+      - template: ../Jobs/UpdateBuildNumber.yml  
+        parameters:
+          PoolImage: ${{ parameters.PoolImage }}
+
+      - template: ../Jobs/BuildDotnetWebApi.yml
+        parameters:
+          PoolImage: ${{ parameters.PoolImage }}
+          SolutionToBuild: ${{ parameters.SolutionToBuild }}
+          DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }}
+          PackageFeed: ${{ parameters.PackageFeed }}
+          ArtifactName: 'Application'
+          CreateDebugArtifact: ${{ parameters.CreateDebugArtifact }}
