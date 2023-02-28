@@ -1,6 +1,7 @@
 parameters:
   - name: PoolImage
   - name: PackageFeed
+  - name: Environment
   - name: CreateDebugArtifact
   - name: NuGetArtifactName
 

@@ -1,6 +1,7 @@
 parameters:
   - name: PoolImage
   - name: PackageFeed
+  - name: Environment
   - name: CreateDebugArtifact
 
 stages:
@@ -14,6 +15,7 @@ stages:
         parameters:
           PoolImage: ${{ parameters.PoolImage }}
           PackageFeed: ${{ parameters.PackageFeed }}
+          Environment: ${{ parameters.Environment }}
           CreateDebugArtifact: ${{ parameters.CreateDebugArtifact }}
           NuGetArtifactName: 'NuGet'
   
