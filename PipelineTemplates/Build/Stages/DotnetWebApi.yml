@@ -8,9 +8,9 @@ parameters:
 - name: CreateDebugArtifact
 
 stages:
-  - stage: BuildDotnetLibrary
+  - stage: BuildDotnetWebApi
     dependsOn: []
-    displayName: Build .NET Library
+    displayName: Build .NET Web Api
   
     jobs:
       - template: ../Jobs/UpdateBuildNumber.yml  

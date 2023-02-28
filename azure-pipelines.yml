@@ -52,8 +52,9 @@ parameters:
   - name: TestPipelines
     displayName: Run Test Pipelines
     type: string
-    default: Build-Dotnet-WebApi
+    default: None
     values:
+      - None
       - All
       - Variables
       - Update-BuildNumber
@@ -62,6 +63,19 @@ parameters:
       - Build-Dotnet-WebApi
 
 stages:
+  - ${{ if eq(parameters.TestPipelines, 'None') }}:
+    - stage: None
+      dependsOn: []
+      displayName: None
+      jobs:
+        - job: None
+          dependsOn: []
+          displayName: None
+          pool:
+            vmImage: ${{ parameters.PoolImage }}
+          steps:
+            - pwsh: Write-Host "None"
+
   - ${{ if or(eq(parameters.TestPipelines, 'All'), eq(parameters.TestPipelines, 'Variables')) }}:
     - template: TestPipelines/TestVariables.yml
       parameters:

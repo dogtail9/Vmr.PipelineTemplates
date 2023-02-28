@@ -1,0 +1,30 @@
+parameters:
+  - name: poolImage
+    default: ubuntu-latest
+  - name: SolutionToBuild
+    default: '**/*.sln'
+  - name: DotnetSdkVersions
+    type: object
+    default: 
+      - '6.x'
+      - '7.x'
+  - name: PackageFeed
+    default: 'VirtualMonoRepo/VirtualMonoRepo_CI2'
+  - name: CreateDebugArtifact
+
+stages:
+  - template: ../Build/Stages/DotnetLibrary.yml
+    parameters:
+      PoolImage: ${{ parameters.poolImage }}
+      SolutionToBuild: ${{ parameters.SolutionToBuild }}
+      DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }}
+      PackageFeed: ${{ parameters.PackageFeed }}
+      CreateDebugArtifact: ${{ parameters.CreateDebugArtifact }}
+
+  - template: ../Deploy/Stages/DotnetLibrary.yml
+    parameters:
+      PoolImage: ${{ parameters.poolImage }}
+      PackageFeed: ${{ parameters.PackageFeed }}
+      Environment: 'Test'
+      CreateDebugArtifact: ${{ parameters.CreateDebugArtifact }}
+    
