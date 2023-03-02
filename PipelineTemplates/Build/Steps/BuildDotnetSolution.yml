@@ -1,14 +1,8 @@
 parameters:
   - name: SolutionToBuild
-  - name: DotnetSdkVersions
-    type: object
   - name: PackageFeed
   
 steps:
-  - template: ./UseDotnetSdk.yml
-    parameters: 
-      DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }}
-  
   - task: DotNetCoreCLI@2
     displayName: 'NuGet Restore'
     inputs:

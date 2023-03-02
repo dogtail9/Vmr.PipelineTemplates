@@ -14,27 +14,28 @@ steps:
           publishTestResults: true
           nobuild: true
           testRunTitle: '$(Build.BuildNumber)-${{ testProject.name }}' #$[replace(${{ testProject.name }},' ', '']'
+ 
+  # - template: PublishCodeCoverage.yml
+  # - script: |
+  #     dotnet tool install -g dotnet-reportgenerator-globaltool --add-source https://api.nuget.org/v3/index.json --version 5.1.10
+  #     reportgenerator -reports:'$(Agent.TempDirectory)/**/coverage.cobertura.xml' -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Cobertura
+  #   displayName: Create Code coverage report
 
-  - script: |
-      dotnet tool install -g dotnet-reportgenerator-globaltool --add-source https://api.nuget.org/v3/index.json --version 5.1.10
-      reportgenerator -reports:'$(Agent.TempDirectory)/**/coverage.cobertura.xml' -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Cobertura
-    displayName: Create Code coverage report
+  # # - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
+  # #   - script: |
+  # #       dotnet tool install -g dotnet-reportgenerator-globaltool --add-source https://api.nuget.org/v3/index.json --version 5.1.10
+  # #       reportgenerator -reports:'$(Agent.TempDirectory)/**/coverage.cobertura.xml' -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Cobertura
+  # #     displayName: Create Code coverage report
 
-  # - ${{ if eq( variables['Agent.OS'], 'Linux' ) }}:
-  #   - script: |
-  #       dotnet tool install -g dotnet-reportgenerator-globaltool --add-source https://api.nuget.org/v3/index.json --version 5.1.10
-  #       reportgenerator -reports:'$(Agent.TempDirectory)/**/coverage.cobertura.xml' -targetdir:$(Build.SourcesDirectory)/CodeCoverage -reporttypes:Cobertura
-  #     displayName: Create Code coverage report
+  # # - ${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
+  # #   - script: |
+  # #       dotnet tool install -g dotnet-reportgenerator-globaltool --add-source https://api.nuget.org/v3/index.json --version 5.1.10
+  # #       reportgenerator -reports:'$(Agent.TempDirectory)\**\coverage.cobertura.xml' -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:Cobertura
+  # #     displayName: Create Code coverage report
 
-  # - ${{ if eq( variables['Agent.OS'], 'Windows_NT' ) }}:
-  #   - script: |
-  #       dotnet tool install -g dotnet-reportgenerator-globaltool --add-source https://api.nuget.org/v3/index.json --version 5.1.10
-  #       reportgenerator -reports:'$(Agent.TempDirectory)\**\coverage.cobertura.xml' -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:Cobertura
-  #     displayName: Create Code coverage report
-
-  - task: PublishCodeCoverageResults@1
-    displayName: 'Publish code coverage'
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'  
+  # - task: PublishCodeCoverageResults@1
+  #   displayName: 'Publish code coverage'
+  #   inputs:
+  #     codeCoverageTool: Cobertura
+  #     summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
+  #     reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'  

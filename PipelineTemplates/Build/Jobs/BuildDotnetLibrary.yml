@@ -15,10 +15,13 @@ jobs:
     pool:
       vmImage: ${{ parameters.PoolImage }}
     steps:
+      - template: ../Steps/UseDotnetSdk.yml
+        parameters: 
+          DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }}
+
       - template: ../Steps/BuildDotnetSolution.yml
         parameters:
           SolutionToBuild: ${{ parameters.SolutionToBuild }} #$(SolutionToBuild)
-          DotnetSdkVersions: ${{ parameters.DotnetSdkVersions }} #$(DotnetSdkVersion)
           PackageFeed: ${{ parameters.PackageFeed }}
 
       - template: ../Steps/RunUnitTests.yml
@@ -28,6 +31,8 @@ jobs:
               projects: '**/*.UnitTests.csproj'
             - name: 'SpecFlow Tests'
               projects: '**/*.Specs.csproj'
+      
+      - template: ../Steps/PublishCodeCoverage.yml
       
       - template: ../Steps/CreateArtifact.yml
         parameters:
